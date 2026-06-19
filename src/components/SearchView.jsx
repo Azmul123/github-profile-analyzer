@@ -11,8 +11,7 @@ import ErrorMessage from './ErrorMessage';
 
 function SearchView({ onRateLimitUpdate }) {
   const [username, setUsername] = useState('');
-  const [user, setUser] = useState(null);
-  const [repos, setRepos] = useState(null);
+  const [profileData, setProfileData] = useState({ user: null, repos: null });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -23,8 +22,7 @@ function SearchView({ onRateLimitUpdate }) {
 
     setLoading(true);
     setError('');
-    setUser(null);
-    setRepos(null);
+    setProfileData({ user: null, repos: null });
 
     try {
       const userResult = await fetchUser(trimmed);
@@ -33,8 +31,10 @@ function SearchView({ onRateLimitUpdate }) {
       const reposResult = await fetchRepos(trimmed);
       onRateLimitUpdate(reposResult.rateLimit);
 
-      setUser(userResult.data);
-      setRepos(reposResult.data);
+      setProfileData({
+        user: userResult.data,
+        repos: reposResult.data
+      });
     } catch (err) {
       setError(err.message);
       if (err.rateLimit) onRateLimitUpdate(err.rateLimit);
@@ -43,7 +43,7 @@ function SearchView({ onRateLimitUpdate }) {
     }
   };
 
-  const showHero = !user && !repos && !loading && !error;
+  const showHero = !profileData.user && !profileData.repos && !loading && !error;
 
   return (
     <div className="search-view">
@@ -103,15 +103,15 @@ function SearchView({ onRateLimitUpdate }) {
       {loading && <LoadingSpinner />}
       {error && <ErrorMessage message={error} />}
 
-      {user && repos && (
+      {profileData.user && profileData.repos && (
         <div className="search-view__results fade-in">
-          <ProfileCard user={user} repos={repos} />
-          <StatsGrid user={user} repos={repos} />
+          <ProfileCard user={profileData.user} repos={profileData.repos} />
+          <StatsGrid user={profileData.user} repos={profileData.repos} />
           <div className="search-view__two-col">
-            <ScoreCard user={user} repos={repos} />
-            <LanguageChart repos={repos} />
+            <ScoreCard user={profileData.user} repos={profileData.repos} />
+            <LanguageChart repos={profileData.repos} />
           </div>
-          <TopRepos repos={repos} />
+          <TopRepos repos={profileData.repos} />
         </div>
       )}
     </div>
