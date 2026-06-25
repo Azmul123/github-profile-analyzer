@@ -8,7 +8,7 @@
 ![GitHub API](https://img.shields.io/badge/GitHub-REST_API-181717?logo=github)
 ![CSS Variables](https://img.shields.io/badge/CSS-Variables-264de4?logo=css3)
 
-🔗 **[Live Demo →](https://github-profile-analyzer.vercel.app)**
+🔗 **[Live Demo →](https://github-profile-analyzer-rouge.vercel.app/)**
 
 ---
 
